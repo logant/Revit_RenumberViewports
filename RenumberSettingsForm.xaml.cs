@@ -12,8 +12,6 @@ namespace Elk
     /// </summary>
     public partial class RenumberSettingsForm : Window
     {
-        static LinearGradientBrush enterBrush = null;
-        static SolidColorBrush leaveBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         string startingNumber;
         string stepSize;
         string digits;
@@ -53,19 +51,7 @@ namespace Elk
             Close();
         }
 
-        private void closeButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (enterBrush == null)
-                enterBrush = EnterBrush();
-            closeButtonRect.Fill = enterBrush;
-        }
-
-        private void closeButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            closeButtonRect.Fill = leaveBrush;
-        }
-
-        private void okButton_Click(object sender, RoutedEventArgs e)
+       private void okButton_Click(object sender, RoutedEventArgs e)
         {
             int startInt = 0;
             int stepInt = 1;
@@ -90,29 +76,6 @@ namespace Elk
             Close();
         }
 
-        private void okButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (enterBrush == null)
-                enterBrush = EnterBrush();
-            okButtonRect.Fill = enterBrush;
-        }
-
-        private void okButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            okButtonRect.Fill = leaveBrush;
-        }
-
-        private LinearGradientBrush EnterBrush()
-        {
-            LinearGradientBrush b = new LinearGradientBrush();
-            b.StartPoint = new Point(0, 0);
-            b.EndPoint = new Point(0, 1);
-            b.GradientStops.Add(new GradientStop(Color.FromArgb(255, 245, 245, 245), 0.0));
-            b.GradientStops.Add(new GradientStop(Color.FromArgb(255, 195, 195, 195), 1.0));
-
-            return b;
-        }
-
         private void Border_KeyDown(object sender, KeyEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) // Is Ctrl key pressed
@@ -123,8 +86,7 @@ namespace Elk
                     System.Diagnostics.Process proc = System.Diagnostics.Process.GetCurrentProcess();
                     IntPtr handle = proc.MainWindowHandle;
                     RevitCommon.UILocation uiForm = new RevitCommon.UILocation("Renumber Viewports", Properties.Settings.Default.TabName, Properties.Settings.Default.PanelName);
-                    System.Windows.Interop.WindowInteropHelper wih = new System.Windows.Interop.WindowInteropHelper(uiForm);
-                    wih.Owner = handle;
+                    System.Windows.Interop.WindowInteropHelper wih = new System.Windows.Interop.WindowInteropHelper(uiForm) {Owner = handle};
                     uiForm.ShowDialog();
 
                     string tab = uiForm.Tab;
