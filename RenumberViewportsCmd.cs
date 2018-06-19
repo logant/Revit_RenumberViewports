@@ -39,6 +39,7 @@ namespace Elk
             {
                 UIDocument uiDoc = commandData.Application.ActiveUIDocument;
                 Document doc = uiDoc.Document;
+                int version = Convert.ToInt32(uiDoc.Application.Application.VersionNumber);
                 try
                 {
                     // Select the sheets
@@ -63,8 +64,13 @@ namespace Elk
                     if (elemList != null && elemList.Count > 0)
                     {
                         // Get the Revit window handle
-                        System.Diagnostics.Process proc = System.Diagnostics.Process.GetCurrentProcess();
-                        IntPtr handle = proc.MainWindowHandle;
+                        IntPtr handle = IntPtr.Zero;
+                        if (version < 2019)
+                            handle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                        else
+                            handle = commandData.Application.GetType().GetProperty("MainWindowHandle") != null
+                                ? (IntPtr)commandData.Application.GetType().GetProperty("MainWindowHandle").GetValue(commandData.Application)
+                                : IntPtr.Zero;
 
                         // Construct form to specify the starting number
                         RenumberSettingsForm form = new RenumberSettingsForm(this);
