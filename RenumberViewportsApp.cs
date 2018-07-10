@@ -23,25 +23,52 @@ namespace Elk
             // Create the pushbutton
             PushButtonData renumberButtonData = new PushButtonData(
                 "Renumber Viewports", "Renumber\nViewports", path, typeof(RenumberViewportCmd).FullName)
+            {
+                LargeImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(Properties.Resources.ViewTitle_32x32.GetHbitmap(), IntPtr.Zero, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()),
+                ToolTip = "Renumber viewports in the selected order"
+            };
+
+            if (!RevitCommon.FileUtils.GetPluginSettings(typeof(RenumberViewportsApp).Assembly.GetName().Name, out string helpPath, out string tabName, out string panelName))
+            {
+                // Set the help file path
+                System.IO.FileInfo fi = new System.IO.FileInfo(typeof(RenumberViewportsApp).Assembly.Location);
+                System.IO.DirectoryInfo directory = fi.Directory;
+                helpPath = directory.FullName + "\\help\\RenumberViewports.pdf";
+
+                // Set the tab name
+                tabName = Properties.Settings.Default.TabName;
+                panelName = Properties.Settings.Default.PanelName;
+            }
+            else
+            {
+                // Check for nulls  in the returned settings
+                if (helpPath == null)
                 {
-                    LargeImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(Properties.Resources.ViewTitle_32x32.GetHbitmap(), IntPtr.Zero, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()),
-                    ToolTip = "Renumber viewports in the selected order"
-                };
+                    // Set the help file path
+                    System.IO.FileInfo fi = new System.IO.FileInfo(typeof(RenumberViewportsApp).Assembly.Location);
+                    System.IO.DirectoryInfo directory = fi.Directory;
+                    helpPath = directory.FullName + "\\help\\RenumberViewports.pdf";
+                }
+
+                if (string.IsNullOrEmpty(tabName))
+                    tabName = Properties.Settings.Default.TabName;
+                if (string.IsNullOrEmpty(panelName))
+                    panelName = Properties.Settings.Default.PanelName;
+            }
 
             // Set the help file
-            System.IO.FileInfo fi = new System.IO.FileInfo(path);
-            System.IO.DirectoryInfo directory = fi.Directory;
-            string helpPath = directory.FullName + "\\help\\RenumberViewports.pdf";
-            ContextualHelp help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
-            renumberButtonData.SetContextualHelp(help);
-
-            string panelName = Properties.Settings.Default.PanelName;
-            int version = 0;
-            if (int.TryParse(application.ControlledApplication.VersionNumber, out version))
+            if (System.IO.File.Exists(helpPath))
             {
-                if (version < 2017)
-                    panelName = "Tools";
+                ContextualHelp help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
+                renumberButtonData.SetContextualHelp(help);
             }
+
+            //int version = 0;
+            //if (int.TryParse(application.ControlledApplication.VersionNumber, out version))
+            //{
+            //    if (version < 2017)
+            //        panelName = "Tools";
+            //}
 
             // Add to the ribbon
             RevitCommon.UI.AddToRibbon(application, Properties.Settings.Default.TabName, panelName, renumberButtonData);

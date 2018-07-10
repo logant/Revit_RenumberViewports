@@ -18,6 +18,9 @@
                 <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" Value="True">
                     <Setter Property="Fill" Value="{DynamicResource MouseOverBrush}"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" Value="False">
+                    <Setter Property="Fill" Value="#FFE1E1E1"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="TypicalButtonStyle" TargetType="Button">
@@ -30,19 +33,19 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <ContentPresenter Margin="{TemplateBinding Control.Padding}"
-                                          HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
-                                          SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"
-                                          ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
-                                          RecognizesAccessKey="True"
-                                          Content="{TemplateBinding ContentControl.Content}"/>
+                                  HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                  SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"
+                                  ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                                  RecognizesAccessKey="True"
+                                  Content="{TemplateBinding ContentControl.Content}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
         <DataTemplate x:Key="ButtonContentTemplate">
             <Grid Width="{Binding Path=Width, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"
-                  Height="{Binding Path=Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+          Height="{Binding Path=Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                 <Rectangle Style="{StaticResource ButtonRectStyle}"/>
                 <TextBlock Text="{Binding Path=Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" TextAlignment="Center"/>
             </Grid>
