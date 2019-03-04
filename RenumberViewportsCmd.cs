@@ -125,7 +125,7 @@ namespace Elk
                     }
 
                     // Write to home
-                    RevitCommon.HKS.WriteToHome("Renumber Viewports", commandData.Application.Application.VersionName, commandData.Application.Application.Username);
+                    RevitCommon.FileUtils.WriteToHome("Renumber Viewports", commandData.Application.Application.VersionName, commandData.Application.Application.Username);
 
                     return Result.Succeeded;
                 }

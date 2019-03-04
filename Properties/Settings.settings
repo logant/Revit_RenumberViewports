@@ -5,11 +5,5 @@
     <Setting Name="Digits" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="TabName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">HKS</Value>
-    </Setting>
-    <Setting Name="PanelName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Views</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

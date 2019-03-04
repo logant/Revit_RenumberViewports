@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Renumber Viewports</Name>
+    <Assembly>RenumberViewports.dll</Assembly>
+    <AddInId>3e105c1d-3c21-48e1-9ea7-cddeceac2bb5</AddInId>
+    <FullClassName>Elk.RenumberViewportsApp</FullClassName>
+    <VendorId>LMNA</VendorId>
+    <VendorDescription>LMN Architects - Tech Studio, www.lmnarchitects.com/tech-studio</VendorDescription>
+  </AddIn>
+</RevitAddIns>

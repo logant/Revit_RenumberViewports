@@ -63,7 +63,7 @@
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </Window.Resources>
-    <Border MouseLeftButtonDown="Border_MouseLeftButtonDown" KeyDown="Border_KeyDown">
+    <Border MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
             <!--Main Background-->
             <Rectangle Fill="WhiteSmoke" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"/>
@@ -84,7 +84,6 @@
             <TextBox Name="digitsTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="100,120,0,0" TextAlignment="Center" TextChanged="digitsTextBox_TextChanged"/>
 
             <!--Buttons-->
-
             <Button x:Name="OkButton" Click="okButton_Click" Style="{StaticResource TypicalButtonStyle}"  ContentTemplate="{StaticResource ButtonContentTemplate}"
                     HorizontalAlignment="Right" Width="80" Height="30" VerticalAlignment="Bottom" Margin="0,0,81,14" Content="OK"/>
             <Button x:Name="CloseButton" Click="closeButton_Click" Style="{StaticResource TypicalButtonStyle}" ContentTemplate="{StaticResource ButtonContentTemplate}"

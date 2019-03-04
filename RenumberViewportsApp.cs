@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Media.Imaging;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI;
@@ -28,50 +30,38 @@ namespace Elk
                 ToolTip = "Renumber viewports in the selected order"
             };
 
-            if (!RevitCommon.FileUtils.GetPluginSettings(typeof(RenumberViewportsApp).Assembly.GetName().Name, out string helpPath, out string tabName, out string panelName))
+            string helpPath = Path.Combine(Path.GetDirectoryName(typeof(RenumberViewportsApp).Assembly.Location), "help\\RenumberViewports.pdf");
+            string tabName = "Add-Ins";
+            string panelName = "Views";
+            if (RevitCommon.FileUtils.GetPluginSettings(typeof(RenumberViewportsApp).Assembly.GetName().Name, out Dictionary<string, string> settings))
             {
-                // Set the help file path
-                System.IO.FileInfo fi = new System.IO.FileInfo(typeof(RenumberViewportsApp).Assembly.Location);
-                System.IO.DirectoryInfo directory = fi.Directory;
-                helpPath = directory.FullName + "\\help\\RenumberViewports.pdf";
-
-                // Set the tab name
-                tabName = Properties.Settings.Default.TabName;
-                panelName = Properties.Settings.Default.PanelName;
-            }
-            else
-            {
-                // Check for nulls  in the returned settings
-                if (helpPath == null)
+                // Settings retrieved, lets try to use them.
+                if (settings.ContainsKey("help-path") && !string.IsNullOrWhiteSpace(settings["help-path"]))
                 {
-                    // Set the help file path
-                    System.IO.FileInfo fi = new System.IO.FileInfo(typeof(RenumberViewportsApp).Assembly.Location);
-                    System.IO.DirectoryInfo directory = fi.Directory;
-                    helpPath = directory.FullName + "\\help\\RenumberViewports.pdf";
+                    // Check to see if it's relative path
+                    string hp = Path.Combine(Path.GetDirectoryName(typeof(RenumberViewportsApp).Assembly.Location), settings["help-path"]);
+                    if (File.Exists(hp))
+                        helpPath = hp;
+                    else
+                        helpPath = settings["help-path"];
                 }
-
-                if (string.IsNullOrEmpty(tabName))
-                    tabName = Properties.Settings.Default.TabName;
-                if (string.IsNullOrEmpty(panelName))
-                    panelName = Properties.Settings.Default.PanelName;
+                if (settings.ContainsKey("tab-name") && !string.IsNullOrWhiteSpace(settings["tab-name"]))
+                    tabName = settings["tab-name"];
+                if (settings.ContainsKey("panel-name") && !string.IsNullOrWhiteSpace(settings["panel-name"]))
+                    panelName = settings["panel-name"];
             }
 
             // Set the help file
-            if (System.IO.File.Exists(helpPath))
-            {
-                ContextualHelp help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
+            ContextualHelp help = null;
+            if (File.Exists(helpPath))
+                help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
+            else if (Uri.TryCreate(helpPath, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                help = new ContextualHelp(ContextualHelpType.Url, helpPath);
+            if (help != null)
                 renumberButtonData.SetContextualHelp(help);
-            }
-
-            //int version = 0;
-            //if (int.TryParse(application.ControlledApplication.VersionNumber, out version))
-            //{
-            //    if (version < 2017)
-            //        panelName = "Tools";
-            //}
 
             // Add to the ribbon
-            RevitCommon.UI.AddToRibbon(application, Properties.Settings.Default.TabName, panelName, renumberButtonData);
+            RevitCommon.UI.AddToRibbon(application, tabName, panelName, renumberButtonData);
 
             return Result.Succeeded;
         }
